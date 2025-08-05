@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RecipeService } from '../../services/recipe.service';
-import { AuthService } from '../../services/auth.service';
-import { FavoritesService } from '../../services/favorites.service';
 import { Recipe } from '../../models/recipe.model';
 import { CommonModule } from '@angular/common';
 
@@ -23,15 +19,22 @@ export class RecipeDetailComponent implements OnInit {
   constructor() {}
 
   async ngOnInit() {
-    const recipeId = this.route.snapshot.paramMap.get('id');
+    const recipeId = (await import('@angular/router')).ActivatedRoute.prototype.snapshot?.paramMap?.get?.('id') ?? null;
     if (!recipeId) { this.loading = false; return; }
 
-    this.recipe = await this.recipeService.getRecipe(recipeId);
-    const user = await this.authService.getCurrentUser();
+    const { RecipeService } = await import('../../services/recipe.service');
+    const { AuthService } = await import('../../services/auth.service');
+    const { FavoritesService } = await import('../../services/favorites.service');
+    const recipeService = new RecipeService();
+    const authService = new AuthService();
+    const favoritesService = new FavoritesService();
+
+    this.recipe = await recipeService.getRecipe(recipeId);
+    const user = await authService.getCurrentUser();
     this.userId = user?.id || null;
     this.isOwner = (this.userId && this.recipe?.created_by === this.userId) || false;
-    if (this.userId) {
-      const favorites = await this.favoritesService.getFavorites(this.userId);
+    if (this.userId && recipeId) {
+      const favorites = await favoritesService.getFavorites(this.userId);
       this.isFavorite = favorites.includes(recipeId);
     }
     this.loading = false;
@@ -39,23 +42,30 @@ export class RecipeDetailComponent implements OnInit {
 
   async deleteRecipe() {
     if (!this.recipe?.id) return;
-    // No confirm popup; use a Boolean property for UI if needed
-    await this.recipeService.deleteRecipe(this.recipe.id);
-    this.router.navigate(['/']);
+    const { RecipeService } = await import('../../services/recipe.service');
+    const recipeService = new RecipeService();
+    await recipeService.deleteRecipe(this.recipe.id);
+    if (typeof window !== 'undefined') {
+      window.location.pathname = '/';
+    }
   }
 
   async toggleFavorite() {
     if (!this.userId || !this.recipe?.id) return;
+    const { FavoritesService } = await import('../../services/favorites.service');
+    const favoritesService = new FavoritesService();
     if (this.isFavorite) {
-      await this.favoritesService.removeFavorite(this.userId, this.recipe.id);
+      await favoritesService.removeFavorite(this.userId, this.recipe.id);
       this.isFavorite = false;
     } else {
-      await this.favoritesService.addFavorite(this.userId, this.recipe.id);
+      await favoritesService.addFavorite(this.userId, this.recipe.id);
       this.isFavorite = true;
     }
   }
 
   editRecipe() {
-    this.router.navigate(['/edit', this.recipe?.id]);
+    if (typeof window !== 'undefined') {
+      window.location.pathname = `/edit/${this.recipe?.id}`;
+    }
   }
 }

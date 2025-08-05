@@ -1,7 +1,4 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RecipeService } from '../../services/recipe.service';
-import { AuthService } from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../../models/recipe.model';
 import { RecipeModalComponent } from '../../components/recipe-modal/recipe-modal.component';
 import { CommonModule } from '@angular/common';
@@ -20,40 +17,55 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RecipeModalComponent, CommonModule]
 })
-export class RecipeFormPage {
-  recipeId: string | null;
+export class RecipeFormPage implements OnInit {
+  recipeId: string | null = null;
   recipe: Partial<Recipe> | null = null;
   errorMessage: string = '';
 
   constructor() {}
 
   async ngOnInit() {
+    const { ActivatedRoute } = await import('@angular/router');
+    this.recipeId = ActivatedRoute.prototype.snapshot?.paramMap?.get?.('id') ?? null;
+    const { RecipeService } = await import('../../services/recipe.service');
+    const recipeService = new RecipeService();
     if (this.recipeId) {
-      this.recipe = await this.recipeService.getRecipe(this.recipeId);
+      this.recipe = await recipeService.getRecipe(this.recipeId);
     }
   }
 
   async handleSave(recipe: Partial<Recipe>) {
-    const user = await this.authService.getCurrentUser();
+    const { AuthService } = await import('../../services/auth.service');
+    const { RecipeService } = await import('../../services/recipe.service');
+    const authService = new AuthService();
+    const recipeService = new RecipeService();
+
+    const user = await authService.getCurrentUser();
     if (!user) {
       this.errorMessage = 'You must be logged in';
       return;
     }
 
     if (this.recipeId) {
-      await this.recipeService.updateRecipe(this.recipeId, recipe);
-      this.router.navigate(['/recipe', this.recipeId]);
+      await recipeService.updateRecipe(this.recipeId, recipe);
+      if (typeof window !== 'undefined') {
+        window.location.pathname = `/recipe/${this.recipeId}`;
+      }
     } else {
-      await this.recipeService.createRecipe({ ...recipe, created_by: user.id } as any);
-      this.router.navigate(['/']);
+      await recipeService.createRecipe({ ...recipe, created_by: user.id } as any);
+      if (typeof window !== 'undefined') {
+        window.location.pathname = '/';
+      }
     }
   }
 
   goBack() {
-    if (this.recipeId) {
-      this.router.navigate(['/recipe', this.recipeId]);
-    } else {
-      this.router.navigate(['/']);
+    if (typeof window !== 'undefined') {
+      if (this.recipeId) {
+        window.location.pathname = `/recipe/${this.recipeId}`;
+      } else {
+        window.location.pathname = '/';
+      }
     }
   }
 }

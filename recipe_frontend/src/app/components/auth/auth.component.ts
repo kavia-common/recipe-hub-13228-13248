@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -20,4 +18,36 @@ export class AuthComponent {
   success: string = '';
 
   constructor() {}
+
+  async handleAuth() {
+    this.loading = true;
+    this.error = '';
+    try {
+      const { AuthService } = await import('../../services/auth.service');
+      const authService = new AuthService();
+      if (this.isSignUp) {
+        await authService.signUp(this.email, this.password);
+        this.success = 'Sign up successful. Please check your email to confirm your account.';
+        this.isSignUp = false;
+        this.email = '';
+        this.password = '';
+      } else {
+        await authService.signIn(this.email, this.password);
+        if (typeof window !== 'undefined') {
+          window.location.pathname = '/';
+        }
+      }
+    } catch (err: any) {
+      this.error = err?.message || 'Authentication failed.';
+    }
+    this.loading = false;
+  }
+
+  switchMode() {
+    this.isSignUp = !this.isSignUp;
+    this.error = '';
+    this.success = '';
+    this.email = '';
+    this.password = '';
+  }
 }

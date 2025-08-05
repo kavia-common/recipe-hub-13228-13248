@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RecipeService } from '../../services/recipe.service';
-import { FavoritesService } from '../../services/favorites.service';
-import { AuthService } from '../../services/auth.service';
 import { Recipe } from '../../models/recipe.model';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-favorites-page',
@@ -64,4 +60,28 @@ export class FavoritesPage implements OnInit {
   favoriteRecipes: Recipe[] = [];
 
   constructor() {}
+
+  async ngOnInit() {
+    const { RecipeService } = await import('../../services/recipe.service');
+    const { FavoritesService } = await import('../../services/favorites.service');
+    const { AuthService } = await import('../../services/auth.service');
+    const recipeService = new RecipeService();
+    const favoritesService = new FavoritesService();
+    const authService = new AuthService();
+
+    const user = await authService.getCurrentUser();
+    if (!user) { this.favoriteRecipes = []; return; }
+    const favoriteIds = await favoritesService.getFavorites(user.id);
+
+    const recipes = await Promise.all(
+      favoriteIds.map(async id => await recipeService.getRecipe(id))
+    );
+    this.favoriteRecipes = recipes.filter((x): x is Recipe => x !== null);
+  }
+
+  viewRecipe(recipe: Recipe) {
+    if (typeof window !== 'undefined') {
+      window.location.pathname = `/recipe/${recipe.id}`;
+    }
+  }
 }

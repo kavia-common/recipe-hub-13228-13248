@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../../models/recipe.model';
-import { RecipeService } from '../../services/recipe.service';
-import { FavoritesService } from '../../services/favorites.service';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -25,17 +21,28 @@ export class RecipeListComponent implements OnInit {
 
   async ngOnInit() {
     this.loading = true;
-    await this.fetchRecipes();
-    const user = await this.authService.getCurrentUser();
+    const { RecipeService } = await import('../../services/recipe.service');
+    const { FavoritesService } = await import('../../services/favorites.service');
+    const { AuthService } = await import('../../services/auth.service');
+    const recipeService = new RecipeService();
+    const favoritesService = new FavoritesService();
+    const authService = new AuthService();
+
+    await this.fetchRecipes(recipeService);
+    const user = await authService.getCurrentUser();
     this.userId = user?.id || null;
     if (this.userId) {
-      this.favorites = await this.favoritesService.getFavorites(this.userId);
+      this.favorites = await favoritesService.getFavorites(this.userId);
     }
     this.loading = false;
   }
 
-  async fetchRecipes() {
-    this.recipes = await this.recipeService.getRecipes(this.query);
+  async fetchRecipes(recipeService?: any) {
+    if (!recipeService) {
+      const { RecipeService } = await import('../../services/recipe.service');
+      recipeService = new RecipeService();
+    }
+    this.recipes = await recipeService.getRecipes(this.query);
   }
 
   async search() {
@@ -48,16 +55,20 @@ export class RecipeListComponent implements OnInit {
 
   async toggleFavorite(recipeId: string) {
     if (!this.userId) return;
+    const { FavoritesService } = await import('../../services/favorites.service');
+    const favoritesService = new FavoritesService();
     if (this.isFavorite(recipeId)) {
-      await this.favoritesService.removeFavorite(this.userId, recipeId);
+      await favoritesService.removeFavorite(this.userId, recipeId);
       this.favorites = this.favorites.filter(id => id !== recipeId);
     } else {
-      await this.favoritesService.addFavorite(this.userId, recipeId);
+      await favoritesService.addFavorite(this.userId, recipeId);
       this.favorites.push(recipeId);
     }
   }
 
   viewRecipe(recipe: Recipe) {
-    this.router.navigate(['/recipe', recipe.id]);
+    if (typeof window !== 'undefined') {
+      window.location.pathname = `/recipe/${recipe.id}`;
+    }
   }
 }
