@@ -1,3 +1,13 @@
-<div class="container">
-  <h1>{{ title }}</h1>
+<header class="nav-bar">
+  <span class="nav-title">Recipe Hub</span>
+  <nav>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
+    <a routerLink="/add" routerLinkActive="active">Add Recipe</a>
+    <a routerLink="/favorites" routerLinkActive="active">Favorites</a>
+    <a routerLink="/auth" routerLinkActive="active" *ngIf="!user">Sign In</a>
+    <a (click)="signOut()" *ngIf="user" style="cursor:pointer;">Sign Out</a>
+  </nav>
+</header>
+<div class="outlet-container">
+  <router-outlet></router-outlet>
 </div>

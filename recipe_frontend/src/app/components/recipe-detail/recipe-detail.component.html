@@ -1,0 +1,39 @@
+<div *ngIf="loading" class="page-loading">Loading Recipe...</div>
+<div *ngIf="!loading && recipe" class="detail-container">
+  <div class="detail-header">
+    <img *ngIf="recipe.imageUrl" [src]="recipe.imageUrl" class="detail-img" alt="{{ recipe.title }}" />
+    <div class="detail-head-content">
+      <h2>{{ recipe.title }}</h2>
+      <button class="favorite-btn" (click)="toggleFavorite()" [class.active]="isFavorite">&#9733; Favorite</button>
+      <div *ngIf="isOwner" class="owner-actions">
+        <button class="edit-btn" (click)="editRecipe()">Edit</button>
+        <button class="delete-btn" (click)="deleteRecipe()">Delete</button>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body">
+    <section>
+      <h4>Description</h4>
+      <p>{{ recipe.description }}</p>
+    </section>
+    <section>
+      <h4>Ingredients</h4>
+      <ul>
+        <li *ngFor="let ingr of recipe.ingredients">{{ ingr }}</li>
+      </ul>
+    </section>
+    <section>
+      <h4>Instructions</h4>
+      <pre class="instructions">{{ recipe.instructions }}</pre>
+    </section>
+    <section *ngIf="recipe.nutrition">
+      <h4>Nutritional Info</h4>
+      <div class="nutrition-row">
+        <span *ngIf="recipe.nutrition.calories">Calories: {{ recipe.nutrition.calories }}</span>
+        <span *ngIf="recipe.nutrition.protein">Protein: {{ recipe.nutrition.protein }}g</span>
+        <span *ngIf="recipe.nutrition.fat">Fat: {{ recipe.nutrition.fat }}g</span>
+        <span *ngIf="recipe.nutrition.carbs">Carbs: {{ recipe.nutrition.carbs }}g</span>
+      </div>
+    </section>
+  </div>
+</div>

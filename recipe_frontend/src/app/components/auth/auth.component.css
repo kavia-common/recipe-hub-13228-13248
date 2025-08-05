@@ -1,0 +1,59 @@
+.auth-container {
+  margin: 60px auto;
+  padding: 30px 32px;
+  max-width: 345px;
+  border-radius: 18px;
+  background: #fff9ec;
+  box-shadow: 0 2px 16px 0 rgba(76,175,80, 0.18);
+  text-align: center;
+}
+h2 {
+  color: #4caf50;
+  margin-bottom: 14px;
+}
+label {
+  display: block;
+  margin: 8px 0 3px 0;
+  color: #1976d2;
+}
+input {
+  width: 100%;
+  border: 1px solid #ffc107;
+  border-radius: 7px;
+  font-size: 1.02rem;
+  margin-bottom: 10px;
+  padding: 7px;
+  background: #fffbe7;
+}
+button[type="submit"] {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 24px;
+  font-size: 1.08rem;
+  margin-top: 10px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s;
+}
+button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+button.switch {
+  background: #ff5722;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin-top: 17px;
+  font-size: .96rem;
+  width: 100%;
+  cursor: pointer;
+}
+.error {
+  margin-top: 13px;
+  color: #ff3b2f;
+  font-weight: 600;
+}

@@ -1,0 +1,12 @@
+<div class="auth-container">
+  <h2>{{ isSignUp ? 'Sign Up' : 'Log In' }}</h2>
+  <form (ngSubmit)="handleAuth()">
+    <label>Email</label>
+    <input [(ngModel)]="email" name="email" required type="email" />
+    <label>Password</label>
+    <input [(ngModel)]="password" name="password" required type="password" />
+    <button type="submit" [disabled]="loading">{{ isSignUp ? 'Sign Up' : 'Log In' }}</button>
+  </form>
+  <button class="switch" (click)="switchMode()">{{ isSignUp ? 'Already have an account? Log In' : "No account? Sign Up" }}</button>
+  <div class="error" *ngIf="error">{{ error }}</div>
+</div>

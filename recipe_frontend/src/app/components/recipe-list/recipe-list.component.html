@@ -1,0 +1,16 @@
+<div class="search-bar">
+  <input [(ngModel)]="query" placeholder="Search recipes..." (keyup.enter)="search()" />
+  <button (click)="search()">Search</button>
+</div>
+<div class="grid">
+  <div class="card" *ngFor="let recipe of recipes" (click)="viewRecipe(recipe)">
+    <img *ngIf="recipe.imageUrl" [src]="recipe.imageUrl" alt="{{recipe.title}}" />
+    <div class="card-content">
+      <h3>{{ recipe.title }}</h3>
+      <p>{{ recipe.description | slice:0:80 }}{{ recipe.description.length > 80 ? '...' : '' }}</p>
+    </div>
+    <button class="favorite" (click)="toggleFavorite(recipe.id); $event.stopPropagation()"
+      [class.active]="isFavorite(recipe.id)">&#9733;</button>
+  </div>
+</div>
+<div *ngIf="loading" class="loading">Loading recipes...</div>

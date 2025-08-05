@@ -1,0 +1,26 @@
+<div class="modal-backdrop" *ngIf="isOpen">
+  <div class="modal">
+    <h2>{{ isEdit ? 'Edit Recipe' : 'Add Recipe' }}</h2>
+    <div class="modal-body">
+      <label>Title <input [(ngModel)]="recipe.title" required /></label>
+      <label>Description <textarea [(ngModel)]="recipe.description" required></textarea></label>
+      <label>Ingredients (separate by lines)
+        <textarea [(ngModel)]="recipe.ingredients"></textarea>
+      </label>
+      <label>Instructions
+        <textarea [(ngModel)]="recipe.instructions"></textarea>
+      </label>
+      <ng-container *ngIf="recipe.nutrition">
+        <label>Calories <input type="number" [(ngModel)]="recipe.nutrition.calories" /></label>
+        <label>Protein (g) <input type="number" [(ngModel)]="recipe.nutrition.protein" /></label>
+        <label>Fat (g) <input type="number" [(ngModel)]="recipe.nutrition.fat" /></label>
+        <label>Carbs (g) <input type="number" [(ngModel)]="recipe.nutrition.carbs" /></label>
+      </ng-container>
+      <label>Image URL <input [(ngModel)]="recipe.imageUrl" /></label>
+    </div>
+    <div class="modal-actions">
+      <button (click)="handleSave()">{{ isEdit ? 'Update' : 'Create' }}</button>
+      <button (click)="close.emit()">Cancel</button>
+    </div>
+  </div>
+</div>

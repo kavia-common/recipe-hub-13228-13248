@@ -1,16 +1,36 @@
-.container {
+.nav-bar {
+  width: 100vw;
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #ffffff;
+  justify-content: space-between;
+  background: linear-gradient(90deg,#4caf50 75%, #ff5722 120%);
+  box-shadow: 0 2px 8px 0 rgba(76, 175, 80, 0.12);
+  padding: 0 28px 0 18px;
+  height: 62px;
+}
+.nav-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #fffbea;
+  letter-spacing: 1.2px;
+}
+.nav-bar nav a {
+  color: #ffe082;
+  margin-left: 22px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.11s;
+}
+.nav-bar nav a.active, .nav-bar nav a:hover {
+  color: #fff;
+}
+.outlet-container {
+  min-height: calc(100vh - 62px);
 }
 
-h1 {
-  color: #1976d2;
-  font-size: 3rem;
-  font-weight: 500;
-  margin: 0;
-  text-align: center;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+@media (max-width: 780px) {
+  .nav-title { font-size: 1.1rem; }
+  .nav-bar { font-size: .96rem; padding: 0 5px 0 7px;}
+  .outlet-container { padding: 6px; }
 }
