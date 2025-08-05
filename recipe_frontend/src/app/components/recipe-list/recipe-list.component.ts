@@ -1,3 +1,4 @@
+/* global window */
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../../models/recipe.model';
 import { CommonModule } from '@angular/common';
@@ -67,7 +68,7 @@ export class RecipeListComponent implements OnInit {
   }
 
   viewRecipe(recipe: Recipe) {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.location) {
       window.location.pathname = `/recipe/${recipe.id}`;
     }
   }

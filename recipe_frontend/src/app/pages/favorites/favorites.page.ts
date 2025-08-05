@@ -1,3 +1,4 @@
+/* global window */
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../../models/recipe.model';
 import { CommonModule } from '@angular/common';

@@ -1,3 +1,4 @@
+/* global window */
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -33,7 +34,7 @@ export class AuthComponent {
         this.password = '';
       } else {
         await authService.signIn(this.email, this.password);
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && window.location) {
           window.location.pathname = '/';
         }
       }

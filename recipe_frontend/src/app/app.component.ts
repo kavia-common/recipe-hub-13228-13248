@@ -1,3 +1,4 @@
+/* global window */
 import { Component, OnInit } from '@angular/core';
 import { User } from './models/user.model';
 import { CommonModule } from '@angular/common';
@@ -26,8 +27,8 @@ export class AppComponent implements OnInit {
     const authService = new AuthService();
     await authService.signOut();
     this.user = null;
-    if (typeof location !== 'undefined') {
-      location.pathname = '/';
+    if (typeof window !== 'undefined' && window.location) {
+      window.location.pathname = '/';
     }
   }
 }

@@ -1,3 +1,4 @@
+/* global window */
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../../models/recipe.model';
 import { RecipeModalComponent } from '../../components/recipe-modal/recipe-modal.component';
@@ -48,19 +49,19 @@ export class RecipeFormPage implements OnInit {
 
     if (this.recipeId) {
       await recipeService.updateRecipe(this.recipeId, recipe);
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && window.location) {
         window.location.pathname = `/recipe/${this.recipeId}`;
       }
     } else {
       await recipeService.createRecipe({ ...recipe, created_by: user.id } as any);
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && window.location) {
         window.location.pathname = '/';
       }
     }
   }
 
   goBack() {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.location) {
       if (this.recipeId) {
         window.location.pathname = `/recipe/${this.recipeId}`;
       } else {

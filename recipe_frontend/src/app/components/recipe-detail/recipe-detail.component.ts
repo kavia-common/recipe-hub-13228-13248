@@ -1,3 +1,4 @@
+/* global window */
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../../models/recipe.model';
 import { CommonModule } from '@angular/common';
@@ -45,7 +46,8 @@ export class RecipeDetailComponent implements OnInit {
     const { RecipeService } = await import('../../services/recipe.service');
     const recipeService = new RecipeService();
     await recipeService.deleteRecipe(this.recipe.id);
-    if (typeof window !== 'undefined') {
+    // eslint-disable-next-line no-undef
+    if (typeof window !== 'undefined' && window.location) {
       window.location.pathname = '/';
     }
   }
@@ -64,7 +66,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   editRecipe() {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.location) {
       window.location.pathname = `/edit/${this.recipe?.id}`;
     }
   }
